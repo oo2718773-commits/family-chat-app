@@ -1,0 +1,3788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="theme-color" content="#4F46E5">
+  <meta name="description" content="Secure, private family messaging application">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="FamilyChat">
+  <meta name="mobile-web-app-capable" content="yes">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" type="image/png" href="/icons/icon-192.png">
+  <link rel="apple-touch-icon" href="/icons/icon-192.png">
+  <title>Family Connect - Private Family Chat</title>
+  <style>
+/**
+ * Family Chat App - Main Stylesheet
+ * Mobile-first, responsive design with dark/light theme support
+ */
+
+/* ============================================
+   CSS CUSTOM PROPERTIES (THEMES)
+   ============================================ */
+
+:root {
+  /* Primary Colors */
+  --primary: #4F46E5;
+  --primary-dark: #4338CA;
+  --primary-light: #818CF8;
+  
+  /* Secondary Colors */
+  --secondary: #EC4899;
+  --secondary-dark: #DB2777;
+  
+  /* Status Colors */
+  --success: #10B981;
+  --warning: #F59E0B;
+  --error: #EF4444;
+  
+  /* Light Theme */
+  --bg-primary: #FFFFFF;
+  --bg-secondary: #F3F4F6;
+  --bg-tertiary: #E5E7EB;
+  --text-primary: #1F2937;
+  --text-secondary: #4B5563;
+  --text-muted: #9CA3AF;
+  --border-color: #E5E7EB;
+  
+  /* Message Bubbles */
+  --msg-out-bg: #DCF8C6;
+  --msg-out-text: #1F2937;
+  --msg-in-bg: #FFFFFF;
+  --msg-in-text: #1F2937;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  
+  /* Spacing */
+  --spacing-xs: 4px;
+  --spacing-sm: 8px;
+  --spacing-md: 16px;
+  --spacing-lg: 24px;
+  --spacing-xl: 32px;
+  
+  /* Border Radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 24px;
+  --radius-full: 9999px;
+  
+  /* Typography */
+  --font-xs: 12px;
+  --font-sm: 14px;
+  --font-md: 16px;
+  --font-lg: 18px;
+  --font-xl: 20px;
+  
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-normal: 250ms ease;
+  --transition-slow: 350ms ease;
+}
+
+/* Dark Theme */
+[data-theme="dark"] {
+  --bg-primary: #1F2937;
+  --bg-secondary: #111827;
+  --bg-tertiary: #374151;
+  --text-primary: #F9FAFB;
+  --text-secondary: #D1D5DB;
+  --text-muted: #9CA3AF;
+  --border-color: #374151;
+  
+  --msg-out-bg: #2D5A3D;
+  --msg-out-text: #F9FAFB;
+  --msg-in-bg: #374151;
+  --msg-in-text: #F9FAFB;
+}
+
+/* ============================================
+   RESET & BASE STYLES
+   ============================================ */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  line-height: 1.5;
+  overflow: hidden;
+  height: 100vh;
+}
+
+a {
+  color: var(--primary);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+button {
+  font-family: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* ============================================
+   APP CONTAINER
+   ============================================ */
+
+#app {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+}
+
+/* ============================================
+   AUTH SCREEN
+   ============================================ */
+
+.auth-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: var(--spacing-lg);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+}
+
+.auth-container {
+  width: 100%;
+  max-width: 400px;
+  background: var(--bg-primary);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-xl);
+  box-shadow: var(--shadow-lg);
+}
+
+.auth-logo {
+  text-align: center;
+  margin-bottom: var(--spacing-xl);
+}
+
+.auth-logo .icon {
+  width: 80px;
+  height: 80px;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  border-radius: var(--radius-lg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--spacing-md);
+}
+
+.auth-logo .icon svg {
+  width: 48px;
+  height: 48px;
+  color: white;
+}
+
+.auth-logo h1 {
+  font-size: var(--font-xl);
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.auth-logo p {
+  color: var(--text-muted);
+  font-size: var(--font-sm);
+  margin-top: var(--spacing-xs);
+}
+
+.auth-tabs {
+  display: flex;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-lg);
+}
+
+.auth-tab {
+  flex: 1;
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  color: var(--text-muted);
+  background: var(--bg-secondary);
+  transition: var(--transition-fast);
+}
+
+.auth-tab.active {
+  background: var(--primary);
+  color: white;
+}
+
+.auth-form {
+  display: none;
+}
+
+.auth-form.active {
+  display: block;
+}
+
+.form-group {
+  margin-bottom: var(--spacing-md);
+}
+
+.form-group label {
+  display: block;
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.form-group input {
+  width: 100%;
+  padding: var(--spacing-md);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  font-size: var(--font-md);
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  transition: var(--transition-fast);
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: var(--primary);
+}
+
+.form-group input::placeholder {
+  color: var(--text-muted);
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-radius: var(--radius-md);
+  font-size: var(--font-md);
+  font-weight: 600;
+  transition: var(--transition-fast);
+}
+
+.btn-primary {
+  background: var(--primary);
+  color: white;
+  width: 100%;
+}
+
+.btn-primary:hover {
+  background: var(--primary-dark);
+}
+
+.btn-secondary {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.btn-secondary:hover {
+  background: var(--bg-tertiary);
+}
+
+.btn-danger {
+  background: var(--error);
+  color: white;
+}
+
+.btn-danger:hover {
+  background: #DC2626;
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.auth-footer {
+  text-align: center;
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--border-color);
+}
+
+.auth-footer p {
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+}
+
+/* ============================================
+   CHAT SCREEN LAYOUT
+   ============================================ */
+
+.chat-screen {
+  display: none;
+  flex-direction: column;
+  height: 100vh;
+  background: var(--bg-secondary);
+}
+
+.chat-screen.active {
+  display: flex;
+}
+
+/* ============================================
+   HEADER
+   ============================================ */
+
+.chat-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--bg-primary);
+  border-bottom: 1px solid var(--border-color);
+  z-index: 100;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+}
+
+.menu-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  transition: var(--transition-fast);
+}
+
+.menu-btn:hover {
+  background: var(--bg-secondary);
+}
+
+.header-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.header-info h1 {
+  font-size: var(--font-lg);
+  font-weight: 700;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.header-info .subtitle {
+  font-size: var(--font-xs);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.online-indicator {
+  width: 8px;
+  height: 8px;
+  background: var(--success);
+  border-radius: var(--radius-full);
+}
+
+.offline-indicator {
+  width: 8px;
+  height: 8px;
+  background: var(--text-muted);
+  border-radius: var(--radius-full);
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.icon-btn {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: var(--transition-fast);
+}
+
+.icon-btn:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.icon-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* ============================================
+   SIDEBAR
+   ============================================ */
+
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition-normal);
+}
+
+.sidebar.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.sidebar-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 280px;
+  height: 100%;
+  background: var(--bg-primary);
+  transform: translateX(-100%);
+  transition: var(--transition-normal);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar.open .sidebar-content {
+  transform: translateX(0);
+}
+
+.sidebar-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.sidebar-header h2 {
+  font-size: var(--font-lg);
+  font-weight: 700;
+}
+
+.close-sidebar {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+}
+
+.sidebar-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: var(--spacing-md);
+}
+
+.sidebar-section {
+  margin-bottom: var(--spacing-lg);
+}
+
+.sidebar-section h3 {
+  font-size: var(--font-xs);
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: var(--spacing-sm);
+}
+
+.user-list-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+}
+
+.user-list-item:hover {
+  background: var(--bg-secondary);
+}
+
+.user-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-weight: 600;
+  font-size: var(--font-md);
+  position: relative;
+  flex-shrink: 0;
+}
+
+.user-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+}
+
+.user-avatar .online-badge {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 12px;
+  height: 12px;
+  background: var(--success);
+  border: 2px solid var(--bg-primary);
+  border-radius: var(--radius-full);
+}
+
+.user-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.user-info .name {
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-info .role {
+  font-size: var(--font-xs);
+  color: var(--text-muted);
+}
+
+.user-info .role.admin {
+  color: var(--warning);
+}
+
+.user-info .role.moderator {
+  color: var(--primary);
+}
+
+/* ============================================
+   CHAT AREA
+   ============================================ */
+
+.chat-area {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding: var(--spacing-md);
+  scroll-behavior: smooth;
+}
+
+.chat-messages {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-xs);
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.message-group {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.message-group.own {
+  align-items: flex-end;
+}
+
+.message-group.other {
+  align-items: flex-start;
+}
+
+.message {
+  display: flex;
+  flex-direction: column;
+  max-width: 75%;
+  min-width: 120px;
+  animation: messageIn 0.3s ease;
+}
+
+@keyframes messageIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message.own {
+  align-self: flex-end;
+}
+
+.message.other {
+  align-self: flex-start;
+}
+
+.message-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
+}
+
+.message.own .message-header {
+  flex-direction: row-reverse;
+}
+
+.message-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: var(--font-xs);
+  font-weight: 600;
+}
+
+.message-avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: var(--radius-full);
+  object-fit: cover;
+}
+
+.message-sender {
+  font-size: var(--font-xs);
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.message-bubble {
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: var(--radius-lg);
+  position: relative;
+}
+
+.message.own .message-bubble {
+  background: var(--msg-out-bg);
+  color: var(--msg-out-text);
+  border-bottom-right-radius: var(--radius-sm);
+}
+
+.message.other .message-bubble {
+  background: var(--msg-in-bg);
+  color: var(--msg-in-text);
+  border-bottom-left-radius: var(--radius-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+.message-content {
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.message-content p {
+  margin: 0;
+}
+
+.message-content a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.message-image {
+  max-width: 100%;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.message-image:hover {
+  opacity: 0.9;
+}
+
+.message-file {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: rgba(0, 0, 0, 0.1);
+  border-radius: var(--radius-md);
+  color: inherit;
+  text-decoration: none;
+}
+
+.message-file:hover {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+.message-file-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.message-file-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.message-file-name {
+  font-weight: 600;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.message-file-size {
+  font-size: var(--font-xs);
+  opacity: 0.7;
+}
+
+.message-audio {
+  width: 200px;
+  max-width: 100%;
+}
+
+.message-sticker {
+  max-width: 150px;
+}
+
+.message-footer {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-top: var(--spacing-xs);
+  padding: 0 var(--spacing-sm);
+}
+
+.message.own .message-footer {
+  flex-direction: row-reverse;
+}
+
+.message-time {
+  font-size: var(--font-xs);
+  color: var(--text-muted);
+}
+
+.message-status {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+}
+
+.message-status svg {
+  width: 14px;
+  height: 14px;
+  color: var(--text-muted);
+}
+
+.message-status.sent svg {
+  color: var(--text-muted);
+}
+
+.message-status.delivered svg {
+  color: var(--text-muted);
+}
+
+.message-status.read svg {
+  color: var(--primary);
+}
+
+.message-edited {
+  font-size: var(--font-xs);
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.message-deleted {
+  font-style: italic;
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+/* Reply indicator */
+.reply-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  background: rgba(0, 0, 0, 0.1);
+  border-left: 3px solid var(--primary);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-xs);
+  font-size: var(--font-xs);
+  cursor: pointer;
+}
+
+.reply-indicator:hover {
+  background: rgba(0, 0, 0, 0.15);
+}
+
+/* Pinned message */
+.pinned-message {
+  background: rgba(79, 70, 229, 0.1);
+  border-left: 3px solid var(--primary);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  margin-bottom: var(--spacing-md);
+}
+
+.pinned-message-header {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  margin-bottom: var(--spacing-xs);
+}
+
+.pinned-message-header svg {
+  width: 16px;
+  height: 16px;
+  color: var(--primary);
+}
+
+.pinned-message-header span {
+  font-size: var(--font-xs);
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.pinned-message-content {
+  font-size: var(--font-sm);
+  color: var(--text-primary);
+}
+
+/* ============================================
+   MESSAGE ACTIONS MENU
+   ============================================ */
+
+.message-actions {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  display: flex;
+  gap: var(--spacing-xs);
+  background: var(--bg-primary);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-xs);
+  box-shadow: var(--shadow-lg);
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition-fast);
+  z-index: 10;
+}
+
+.message:hover .message-actions,
+.message:focus-within .message-actions {
+  opacity: 1;
+  visibility: visible;
+}
+
+.message.own .message-actions {
+  left: auto;
+  right: 0;
+}
+
+.action-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: var(--transition-fast);
+}
+
+.action-btn:hover {
+  background: var(--bg-secondary);
+  color: var(--text-primary);
+}
+
+.action-btn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ============================================
+   INPUT AREA
+   ============================================ */
+
+.input-area {
+  background: var(--bg-primary);
+  border-top: 1px solid var(--border-color);
+  padding: var(--spacing-sm) var(--spacing-md);
+}
+
+.input-container {
+  display: flex;
+  align-items: flex-end;
+  gap: var(--spacing-sm);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-xl);
+  padding: var(--spacing-sm) var(--spacing-sm) var(--spacing-sm) var(--spacing-md);
+}
+
+.input-wrapper {
+  flex: 1;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+}
+
+.message-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  resize: none;
+  font-size: var(--font-md);
+  color: var(--text-primary);
+  line-height: 1.4;
+  max-height: 120px;
+  padding: var(--spacing-sm) 0;
+}
+
+.message-input:focus {
+  outline: none;
+}
+
+.message-input::placeholder {
+  color: var(--text-muted);
+}
+
+.input-actions {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+}
+
+.attach-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: var(--transition-fast);
+}
+
+.attach-btn:hover {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+.attach-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.send-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: var(--primary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.send-btn:hover {
+  background: var(--primary-dark);
+}
+
+.send-btn:disabled {
+  background: var(--bg-tertiary);
+  color: var(--text-muted);
+}
+
+.send-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Voice recording */
+.voice-btn {
+  width: 44px;
+  height: 44px;
+  border-radius: var(--radius-full);
+  background: var(--secondary);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition-fast);
+}
+
+.voice-btn:hover {
+  background: var(--secondary-dark);
+}
+
+.voice-btn.recording {
+  background: var(--error);
+  animation: pulse 1s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.1);
+  }
+}
+
+.voice-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+/* Reply bar */
+.reply-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--bg-secondary);
+  border-top: 1px solid var(--border-color);
+}
+
+.reply-bar-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.reply-bar-user {
+  font-size: var(--font-xs);
+  font-weight: 600;
+  color: var(--primary);
+}
+
+.reply-bar-text {
+  font-size: var(--font-sm);
+  color: var(--text-primary);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cancel-reply {
+  width: 28px;
+  height: 28px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+}
+
+/* ============================================
+   TYPING INDICATOR
+   ============================================ */
+
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  color: var(--text-muted);
+  font-size: var(--font-sm);
+}
+
+.typing-dots {
+  display: flex;
+  gap: 3px;
+}
+
+.typing-dots span {
+  width: 6px;
+  height: 6px;
+  background: var(--text-muted);
+  border-radius: var(--radius-full);
+  animation: typingBounce 1.4s infinite;
+}
+
+.typing-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.typing-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes typingBounce {
+  0%, 60%, 100% {
+    transform: translateY(0);
+  }
+  30% {
+    transform: translateY(-4px);
+  }
+}
+
+/* ============================================
+   MODALS
+   ============================================ */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  opacity: 0;
+  visibility: hidden;
+  transition: var(--transition-normal);
+  padding: var(--spacing-md);
+}
+
+.modal-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.modal {
+  width: 100%;
+  max-width: 400px;
+  max-height: 90vh;
+  background: var(--bg-primary);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+  transform: scale(0.9);
+  transition: var(--transition-normal);
+}
+
+.modal-overlay.open .modal {
+  transform: scale(1);
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h2 {
+  font-size: var(--font-lg);
+  font-weight: 700;
+}
+
+.modal-close {
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+}
+
+.modal-body {
+  padding: var(--spacing-lg);
+  overflow-y: auto;
+}
+
+.modal-footer {
+  display: flex;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md) var(--spacing-lg);
+  border-top: 1px solid var(--border-color);
+}
+
+.modal-footer .btn {
+  flex: 1;
+}
+
+/* Image viewer modal */
+.image-viewer {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.image-viewer-header {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--spacing-md);
+}
+
+.image-viewer-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-md);
+}
+
+.image-viewer-content img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+/* ============================================
+   SETTINGS PANEL
+   ============================================ */
+
+.settings-section {
+  margin-bottom: var(--spacing-lg);
+}
+
+.settings-section h3 {
+  font-size: var(--font-sm);
+  font-weight: 600;
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.settings-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  transition: var(--transition-fast);
+}
+
+.settings-item:hover {
+  background: var(--bg-secondary);
+}
+
+.settings-item-label {
+  font-size: var(--font-md);
+  color: var(--text-primary);
+}
+
+.toggle-switch {
+  position: relative;
+  width: 50px;
+  height: 28px;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.toggle-switch.active {
+  background: var(--primary);
+}
+
+.toggle-switch::after {
+  content: '';
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 24px;
+  height: 24px;
+  background: white;
+  border-radius: var(--radius-full);
+  transition: var(--transition-fast);
+  box-shadow: var(--shadow-sm);
+}
+
+.toggle-switch.active::after {
+  transform: translateX(22px);
+}
+
+/* Profile settings */
+.profile-avatar {
+  width: 80px;
+  height: 80px;
+  border-radius: var(--radius-full);
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto var(--spacing-md);
+  font-size: var(--font-xl);
+  font-weight: 700;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.profile-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-avatar-change {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 28px;
+  height: 28px;
+  background: var(--primary);
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  border: 2px solid var(--bg-primary);
+}
+
+.profile-name {
+  text-align: center;
+  font-size: var(--font-lg);
+  font-weight: 700;
+  margin-bottom: var(--spacing-xs);
+}
+
+.profile-role {
+  text-align: center;
+  font-size: var(--font-sm);
+  color: var(--text-muted);
+  text-transform: capitalize;
+}
+
+/* ============================================
+   ADMIN PANEL
+   ============================================ */
+
+.admin-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-lg);
+}
+
+.stat-card {
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  text-align: center;
+}
+
+.stat-value {
+  font-size: var(--font-xl);
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.stat-label {
+  font-size: var(--font-xs);
+  color: var(--text-muted);
+}
+
+.admin-users-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.admin-user-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+}
+
+.admin-user-info {
+  flex: 1;
+}
+
+.admin-user-name {
+  font-weight: 600;
+}
+
+.admin-user-role {
+  font-size: var(--font-xs);
+  color: var(--text-muted);
+}
+
+.admin-user-actions {
+  display: flex;
+  gap: var(--spacing-xs);
+}
+
+/* ============================================
+   TOAST NOTIFICATIONS
+   ============================================ */
+
+.toast-container {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3000;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+}
+
+.toast {
+  background: var(--text-primary);
+  color: var(--bg-primary);
+  padding: var(--spacing-sm) var(--spacing-lg);
+  border-radius: var(--radius-xl);
+  font-size: var(--font-sm);
+  font-weight: 500;
+  box-shadow: var(--shadow-lg);
+  animation: toastIn 0.3s ease;
+}
+
+.toast.success {
+  background: var(--success);
+}
+
+.toast.error {
+  background: var(--error);
+}
+
+.toast.warning {
+  background: var(--warning);
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   LOADING STATES
+   ============================================ */
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid var(--border-color);
+  border-top-color: var(--primary);
+  border-radius: var(--radius-full);
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 4000;
+}
+
+[data-theme="dark"] .loading-overlay {
+  background: rgba(31, 41, 55, 0.9);
+}
+
+/* ============================================
+   EMPTY STATES
+   ============================================ */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--spacing-xl);
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.empty-state svg {
+  width: 80px;
+  height: 80px;
+  margin-bottom: var(--spacing-md);
+  opacity: 0.5;
+}
+
+.empty-state h3 {
+  font-size: var(--font-lg);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.empty-state p {
+  font-size: var(--font-sm);
+}
+
+/* ============================================
+   SEARCH BAR
+   ============================================ */
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-md);
+}
+
+.search-bar svg {
+  width: 20px;
+  height: 20px;
+  color: var(--text-muted);
+}
+
+.search-bar input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: var(--font-md);
+  color: var(--text-primary);
+}
+
+.search-bar input:focus {
+  outline: none;
+}
+
+.search-results {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.search-result-item {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  transition: var(--transition-fast);
+}
+
+.search-result-item:hover {
+  background: var(--bg-secondary);
+}
+
+/* ============================================
+   FILE PICKER (HIDDEN)
+   ============================================ */
+
+.file-input {
+  display: none;
+}
+
+/* ============================================
+   OFFLINE INDICATOR
+   ============================================ */
+
+.offline-banner {
+  display: none;
+  background: var(--warning);
+  color: white;
+  text-align: center;
+  padding: var(--spacing-xs) var(--spacing-md);
+  font-size: var(--font-sm);
+  font-weight: 500;
+}
+
+.offline .offline-banner {
+  display: block;
+}
+
+/* ============================================
+   DATE SEPARATOR
+   ============================================ */
+
+.date-separator {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-md);
+  margin: var(--spacing-md) 0;
+}
+
+.date-separator::before,
+.date-separator::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--border-color);
+}
+
+.date-separator span {
+  font-size: var(--font-xs);
+  color: var(--text-muted);
+  text-transform: uppercase;
+  font-weight: 600;
+}
+
+/* ============================================
+   RESPONSIVE DESIGN
+   ============================================ */
+
+@media (min-width: 768px) {
+  .sidebar {
+    position: relative;
+    width: 300px;
+    height: 100%;
+    opacity: 1;
+    visibility: visible;
+    background: transparent;
+  }
+  
+  .sidebar-content {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transform: none;
+    border-right: 1px solid var(--border-color);
+  }
+  
+  .chat-layout {
+    display: flex;
+    flex: 1;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  .chat-main {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .menu-btn {
+    display: none;
+  }
+  
+  .message {
+    max-width: 60%;
+  }
+  
+  .message-bubble {
+    font-size: var(--font-md);
+  }
+}
+
+@media (min-width: 1024px) {
+  .message {
+    max-width: 50%;
+  }
+  
+  .header-info h1 {
+    font-size: var(--font-xl);
+  }
+}
+
+@media (max-width: 480px) {
+  .message {
+    max-width: 85%;
+  }
+  
+  .auth-container {
+    padding: var(--spacing-lg);
+  }
+  
+  .header-actions .icon-btn:not(:last-child) {
+    display: none;
+  }
+}
+
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.3s ease;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease;
+}
+
+/* ============================================
+   SCROLLBARS
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-full);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text-muted);
+}
+
+/* ============================================
+   SELECTION
+   ============================================ */
+
+::selection {
+  background: var(--primary);
+  color: white;
+}
+  </style>
+</head>
+<body>
+  <div id="app">
+    <!-- Auth Screen -->
+    <div id="authScreen" class="auth-screen">
+      <div class="auth-container">
+        <div class="auth-logo">
+          <div class="icon">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+          </div>
+          <h1>Family Connect</h1>
+          <p>Private family messaging</p>
+        </div>
+        
+        <div class="auth-tabs">
+          <button class="auth-tab active" data-tab="login">Login</button>
+          <button class="auth-tab" data-tab="register">Register</button>
+        </div>
+        
+        <!-- Login Form -->
+        <form id="loginForm" class="auth-form active">
+          <div class="form-group">
+            <label for="loginUsername">Username</label>
+            <input type="text" id="loginUsername" placeholder="Enter your username" required>
+          </div>
+          <div class="form-group">
+            <label for="loginPassword">Password</label>
+            <input type="password" id="loginPassword" placeholder="Enter your password" required>
+          </div>
+          <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+        
+        <!-- Register Form -->
+        <form id="registerForm" class="auth-form">
+          <div class="form-group">
+            <label for="registerUsername">Username</label>
+            <input type="text" id="registerUsername" placeholder="Choose a username" required minlength="3" maxlength="20">
+          </div>
+          <div class="form-group">
+            <label for="registerDisplayName">Display Name</label>
+            <input type="text" id="registerDisplayName" placeholder="Your name as shown to family" required minlength="2" maxlength="30">
+          </div>
+          <div class="form-group">
+            <label for="registerPassword">Password</label>
+            <input type="password" id="registerPassword" placeholder="Create a password (min 6 chars)" required minlength="6">
+          </div>
+          <button type="submit" class="btn btn-primary">Create Account</button>
+        </form>
+        
+        <div class="auth-footer">
+          <p>🔒 All messages are encrypted and private to your family</p>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Chat Screen -->
+    <div id="chatScreen" class="chat-screen">
+      <!-- Header -->
+      <header class="chat-header">
+        <div class="header-left">
+          <button class="menu-btn" id="menuBtn">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+          </button>
+          <div class="header-info">
+            <h1>Family Chat</h1>
+            <div class="subtitle">
+              <span class="online-indicator" id="onlineIndicator"></span>
+              <span id="onlineCount">0 online</span>
+            </div>
+          </div>
+        </div>
+        <div class="header-actions">
+          <button class="icon-btn" id="searchBtn" title="Search">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+          </button>
+          <button class="icon-btn" id="settingsBtn" title="Settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+          </button>
+        </div>
+      </header>
+      
+      <!-- Offline Banner -->
+      <div class="offline-banner">
+        📴 You are offline. Some features may be limited.
+      </div>
+      
+      <!-- Chat Layout -->
+      <div class="chat-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+          <div class="sidebar-content">
+            <div class="sidebar-header">
+              <h2>Family Members</h2>
+              <button class="close-sidebar" id="closeSidebar">
+                <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            <div class="sidebar-body">
+              <div class="sidebar-section">
+                <h3>Online Now</h3>
+                <div id="onlineUsersList"></div>
+              </div>
+              <div class="sidebar-section">
+                <h3>All Members</h3>
+                <div id="usersList"></div>
+              </div>
+              <div class="sidebar-section" id="adminSection" style="display: none;">
+                <h3>Admin Panel</h3>
+                <button class="btn btn-primary" id="openAdminBtn" style="width: 100%;">
+                  Open Admin Dashboard
+                </button>
+              </div>
+            </div>
+          </div>
+        </aside>
+        
+        <!-- Main Chat Area -->
+        <main class="chat-main">
+          <!-- Chat Area -->
+          <div class="chat-area" id="chatArea">
+            <div class="chat-messages" id="chatMessages">
+              <!-- Messages will be loaded here -->
+            </div>
+          </div>
+          
+          <!-- Typing Indicator -->
+          <div class="typing-indicator" id="typingIndicator" style="display: none;">
+            <div class="typing-dots">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+            <span id="typingText">Someone is typing...</span>
+          </div>
+          
+          <!-- Input Area -->
+          <div class="input-area">
+            <!-- Reply Bar (shown when replying to a message) -->
+            <div class="reply-bar" id="replyBar" style="display: none;">
+              <div class="reply-bar-content">
+                <div class="reply-bar-user" id="replyBarUser"></div>
+                <div class="reply-bar-text" id="replyBarText"></div>
+              </div>
+              <button class="cancel-reply" id="cancelReply">
+                <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="18" y1="6" x2="6" y2="18"></line>
+                  <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+              </button>
+            </div>
+            
+            <div class="input-container">
+              <div class="input-actions">
+                <button class="attach-btn" id="attachBtn" title="Attach file">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"></path>
+                  </svg>
+                </button>
+              </div>
+              <div class="input-wrapper">
+                <textarea class="message-input" id="messageInput" placeholder="Type a message..." rows="1"></textarea>
+              </div>
+              <div class="input-actions">
+                <button class="voice-btn" id="voiceBtn" title="Record voice message">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path>
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2"></path>
+                    <line x1="12" y1="19" x2="12" y2="23"></line>
+                    <line x1="8" y1="23" x2="16" y2="23"></line>
+                  </svg>
+                </button>
+                <button class="send-btn" id="sendBtn" title="Send message">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="22" y1="2" x2="11" y2="13"></line>
+                    <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+    
+    <!-- Search Modal -->
+    <div class="modal-overlay" id="searchModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>Search Messages</h2>
+          <button class="modal-close" id="closeSearchModal">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="search-bar">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"></circle>
+              <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+            </svg>
+            <input type="text" id="searchInput" placeholder="Search messages...">
+          </div>
+          <div class="search-results" id="searchResults"></div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Settings Modal -->
+    <div class="modal-overlay" id="settingsModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>Settings</h2>
+          <button class="modal-close" id="closeSettingsModal">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="settings-section">
+            <div class="profile-avatar" id="profileAvatar">
+              <span id="profileInitial">U</span>
+              <button class="profile-avatar-change" id="changeAvatarBtn">
+                <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                  <circle cx="12" cy="13" r="4"></circle>
+                </svg>
+              </button>
+            </div>
+            <div class="profile-name" id="profileName">User Name</div>
+            <div class="profile-role" id="profileRole">Member</div>
+          </div>
+          
+          <div class="settings-section">
+            <h3>Account</h3>
+            <div class="settings-item" id="editProfileBtn">
+              <span class="settings-item-label">Edit Profile</span>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+            <div class="settings-item" id="changePasswordBtn">
+              <span class="settings-item-label">Change Password</span>
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+          </div>
+          
+          <div class="settings-section">
+            <h3>Appearance</h3>
+            <div class="settings-item">
+              <span class="settings-item-label">Dark Mode</span>
+              <div class="toggle-switch" id="darkModeToggle"></div>
+            </div>
+          </div>
+          
+          <div class="settings-section">
+            <h3>Notifications</h3>
+            <div class="settings-item">
+              <span class="settings-item-label">Push Notifications</span>
+              <div class="toggle-switch active" id="pushToggle"></div>
+            </div>
+          </div>
+          
+          <div class="modal-footer">
+            <button class="btn btn-danger" id="logoutBtn">Logout</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Edit Profile Modal -->
+    <div class="modal-overlay" id="editProfileModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>Edit Profile</h2>
+          <button class="modal-close" id="closeEditProfileModal">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="editDisplayName">Display Name</label>
+            <input type="text" id="editDisplayName" placeholder="Your name" required>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelEditProfileBtn">Cancel</button>
+            <button class="btn btn-primary" id="saveProfileBtn">Save Changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Change Password Modal -->
+    <div class="modal-overlay" id="changePasswordModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>Change Password</h2>
+          <button class="modal-close" id="closeChangePasswordModal">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="currentPassword">Current Password</label>
+            <input type="password" id="currentPassword" placeholder="Enter current password" required>
+          </div>
+          <div class="form-group">
+            <label for="newPassword">New Password</label>
+            <input type="password" id="newPassword" placeholder="Enter new password" required minlength="6">
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelChangePasswordBtn">Cancel</button>
+            <button class="btn btn-primary" id="savePasswordBtn">Change Password</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Admin Modal -->
+    <div class="modal-overlay" id="adminModal">
+      <div class="modal" style="max-width: 500px;">
+        <div class="modal-header">
+          <h2>Admin Dashboard</h2>
+          <button class="modal-close" id="closeAdminModal">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="admin-stats">
+            <div class="stat-card">
+              <div class="stat-value" id="statUsers">0</div>
+              <div class="stat-label">Members</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="statMessages">0</div>
+              <div class="stat-label">Messages</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="statOnline">0</div>
+              <div class="stat-label">Online</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-value" id="statPinned">0</div>
+              <div class="stat-label">Pinned</div>
+            </div>
+          </div>
+          
+          <div class="settings-section">
+            <h3>Add New Member</h3>
+            <div class="form-group">
+              <label for="newUsername">Username</label>
+              <input type="text" id="newUsername" placeholder="Username">
+            </div>
+            <div class="form-group">
+              <label for="newDisplayName">Display Name</label>
+              <input type="text" id="newDisplayName" placeholder="Display Name">
+            </div>
+            <div class="form-group">
+              <label for="newUserPassword">Password</label>
+              <input type="password" id="newUserPassword" placeholder="Password">
+            </div>
+            <button class="btn btn-primary" id="addUserBtn" style="width: 100%;">Add Member</button>
+          </div>
+          
+          <div class="settings-section">
+            <h3>Manage Members</h3>
+            <div class="admin-users-list" id="adminUsersList"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Image Viewer Modal -->
+    <div class="modal-overlay" id="imageViewerModal">
+      <div class="image-viewer">
+        <div class="image-viewer-header">
+          <button class="modal-close" id="closeImageViewerModal">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="image-viewer-content">
+          <img id="imageViewerImg" src="" alt="Image">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Edit Message Modal -->
+    <div class="modal-overlay" id="editMessageModal">
+      <div class="modal">
+        <div class="modal-header">
+          <h2>Edit Message</h2>
+          <button class="modal-close" id="closeEditMessageModal">
+            <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="form-group">
+            <textarea id="editMessageInput" rows="4" placeholder="Edit your message..." style="width: 100%; padding: 12px; border: 2px solid var(--border-color); border-radius: 12px; resize: none; font-family: inherit;"></textarea>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" id="cancelEditMessageBtn">Cancel</button>
+            <button class="btn btn-primary" id="saveEditMessageBtn">Save</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Toast Container -->
+    <div class="toast-container" id="toastContainer"></div>
+    
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay" style="display: none;">
+      <div class="loading-spinner"></div>
+    </div>
+  </div>
+  
+  <!-- Hidden file inputs -->
+  <input type="file" id="fileInput" class="file-input" accept="image/*,audio/*,application/pdf">
+  <input type="file" id="avatarInput" class="file-input" accept="image/*">
+  
+  <script>
+/**
+ * Family Chat App - Main Application Logic
+ * Handles all frontend functionality including auth, messaging, and UI
+ */
+
+// ============================================
+// API CONFIGURATION
+// ============================================
+
+const API_BASE = '/api';
+
+// ============================================
+// STATE MANAGEMENT
+// ============================================
+
+const state = {
+  user: null,
+  token: null,
+  messages: [],
+  users: [],
+  onlineUsers: new Set(),
+  replyTo: null,
+  editingMessage: null,
+  isRecording: false,
+  mediaRecorder: null,
+  audioChunks: [],
+  pollingInterval: null,
+  searchTimeout: null
+};
+
+// ============================================
+// DOM ELEMENTS
+// ============================================
+
+const elements = {
+  // Auth
+  authScreen: document.getElementById('authScreen'),
+  chatScreen: document.getElementById('chatScreen'),
+  loginForm: document.getElementById('loginForm'),
+  registerForm: document.getElementById('registerForm'),
+  loginUsername: document.getElementById('loginUsername'),
+  loginPassword: document.getElementById('loginPassword'),
+  registerUsername: document.getElementById('registerUsername'),
+  registerDisplayName: document.getElementById('registerDisplayName'),
+  registerPassword: document.getElementById('registerPassword'),
+  
+  // Chat
+  chatMessages: document.getElementById('chatMessages'),
+  chatArea: document.getElementById('chatArea'),
+  messageInput: document.getElementById('messageInput'),
+  sendBtn: document.getElementById('sendBtn'),
+  attachBtn: document.getElementById('attachBtn'),
+  voiceBtn: document.getElementById('voiceBtn'),
+  fileInput: document.getElementById('fileInput'),
+  avatarInput: document.getElementById('avatarInput'),
+  
+  // Reply
+  replyBar: document.getElementById('replyBar'),
+  replyBarUser: document.getElementById('replyBarUser'),
+  replyBarText: document.getElementById('replyBarText'),
+  cancelReply: document.getElementById('cancelReply'),
+  
+  // Sidebar
+  sidebar: document.getElementById('sidebar'),
+  menuBtn: document.getElementById('menuBtn'),
+  closeSidebar: document.getElementById('closeSidebar'),
+  usersList: document.getElementById('usersList'),
+  onlineUsersList: document.getElementById('onlineUsersList'),
+  adminSection: document.getElementById('adminSection'),
+  openAdminBtn: document.getElementById('openAdminBtn'),
+  
+  // Header
+  onlineIndicator: document.getElementById('onlineIndicator'),
+  onlineCount: document.getElementById('onlineCount'),
+  
+  // Search
+  searchBtn: document.getElementById('searchBtn'),
+  searchModal: document.getElementById('searchModal'),
+  closeSearchModal: document.getElementById('closeSearchModal'),
+  searchInput: document.getElementById('searchInput'),
+  searchResults: document.getElementById('searchResults'),
+  
+  // Settings
+  settingsBtn: document.getElementById('settingsBtn'),
+  settingsModal: document.getElementById('settingsModal'),
+  closeSettingsModal: document.getElementById('closeSettingsModal'),
+  profileAvatar: document.getElementById('profileAvatar'),
+  profileInitial: document.getElementById('profileInitial'),
+  profileName: document.getElementById('profileName'),
+  profileRole: document.getElementById('profileRole'),
+  darkModeToggle: document.getElementById('darkModeToggle'),
+  pushToggle: document.getElementById('pushToggle'),
+  logoutBtn: document.getElementById('logoutBtn'),
+  changeAvatarBtn: document.getElementById('changeAvatarBtn'),
+  editProfileBtn: document.getElementById('editProfileBtn'),
+  changePasswordBtn: document.getElementById('changePasswordBtn'),
+  
+  // Edit Profile
+  editProfileModal: document.getElementById('editProfileModal'),
+  closeEditProfileModal: document.getElementById('closeEditProfileModal'),
+  editDisplayName: document.getElementById('editDisplayName'),
+  cancelEditProfileBtn: document.getElementById('cancelEditProfileBtn'),
+  saveProfileBtn: document.getElementById('saveProfileBtn'),
+  
+  // Change Password
+  changePasswordModal: document.getElementById('changePasswordModal'),
+  closeChangePasswordModal: document.getElementById('closeChangePasswordModal'),
+  currentPassword: document.getElementById('currentPassword'),
+  newPassword: document.getElementById('newPassword'),
+  cancelChangePasswordBtn: document.getElementById('cancelChangePasswordBtn'),
+  savePasswordBtn: document.getElementById('savePasswordBtn'),
+  
+  // Admin
+  adminModal: document.getElementById('adminModal'),
+  closeAdminModal: document.getElementById('closeAdminModal'),
+  statUsers: document.getElementById('statUsers'),
+  statMessages: document.getElementById('statMessages'),
+  statOnline: document.getElementById('statOnline'),
+  statPinned: document.getElementById('statPinned'),
+  newUsername: document.getElementById('newUsername'),
+  newDisplayName: document.getElementById('newDisplayName'),
+  newUserPassword: document.getElementById('newUserPassword'),
+  addUserBtn: document.getElementById('addUserBtn'),
+  adminUsersList: document.getElementById('adminUsersList'),
+  
+  // Image Viewer
+  imageViewerModal: document.getElementById('imageViewerModal'),
+  closeImageViewerModal: document.getElementById('closeImageViewerModal'),
+  imageViewerImg: document.getElementById('imageViewerImg'),
+  
+  // Edit Message
+  editMessageModal: document.getElementById('editMessageModal'),
+  closeEditMessageModal: document.getElementById('closeEditMessageModal'),
+  editMessageInput: document.getElementById('editMessageInput'),
+  cancelEditMessageBtn: document.getElementById('cancelEditMessageBtn'),
+  saveEditMessageBtn: document.getElementById('saveEditMessageBtn'),
+  
+  // Typing
+  typingIndicator: document.getElementById('typingIndicator'),
+  typingText: document.getElementById('typingText'),
+  
+  // Other
+  toastContainer: document.getElementById('toastContainer'),
+  loadingOverlay: document.getElementById('loadingOverlay')
+};
+
+// ============================================
+// API FUNCTIONS
+// ============================================
+
+async function apiRequest(endpoint, options = {}) {
+  const url = `${API_BASE}${endpoint}`;
+  const headers = {
+    'Content-Type': 'application/json',
+    ...options.headers
+  };
+  
+  if (state.token) {
+    headers['Authorization'] = `Bearer ${state.token}`;
+  }
+  
+  try {
+    const response = await fetch(url, {
+      ...options,
+      headers
+    });
+    
+    // Check if response is HTML (error page) instead of JSON
+    const contentType = response.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+      const text = await response.text();
+      console.error('Non-JSON response:', text.substring(0, 200));
+      throw new Error('Server error. Please try again.');
+    }
+    
+    const data = await response.json();
+    
+    if (!response.ok) {
+      throw new Error(data.error || 'Request failed');
+    }
+    
+    return data;
+  } catch (error) {
+    console.error('API Error:', error);
+    throw error;
+  }
+}
+
+async function uploadFile(file, type = 'message') {
+  const formData = new FormData();
+  formData.append('file', file);
+  
+  const url = `${API_BASE}/upload${type === 'avatar' ? '?type=avatar' : ''}`;
+  
+  const response = await fetch(url, {
+    method: 'POST',
+    headers: {
+      'Authorization': `Bearer ${state.token}`
+    },
+    body: formData
+  });
+  
+  const data = await response.json();
+  
+  if (!response.ok) {
+    throw new Error(data.error || 'Upload failed');
+  }
+  
+  return data.file;
+}
+
+// ============================================
+// AUTH FUNCTIONS
+// ============================================
+
+async function login(username, password) {
+  showLoading(true);
+  
+  try {
+    const data = await apiRequest('/auth/login', {
+      method: 'POST',
+      body: JSON.stringify({ username, password })
+    });
+    
+    state.token = data.token;
+    state.user = data.user;
+    
+    localStorage.setItem('token', data.token);
+    localStorage.setItem('user', JSON.stringify(data.user));
+    
+    showChatScreen();
+    showToast('Welcome back!', 'success');
+  } catch (error) {
+    showToast(error.message || 'Login failed', 'error');
+  } finally {
+    showLoading(false);
+  }
+}
+
+async function register(username, displayName, password) {
+  showLoading(true);
+  
+  try {
+    const data = await apiRequest('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({ username, displayName, password })
+    });
+    
+    showToast('Account created successfully!', 'success');
+    switchAuthTab('login');
+  } catch (error) {
+    showToast(error.message || 'Registration failed', 'error');
+  } finally {
+    showLoading(false);
+  }
+}
+
+async function logout() {
+  try {
+    await apiRequest('/auth/logout', { method: 'POST' });
+  } catch (error) {
+    // Ignore logout errors
+  }
+  
+  state.token = null;
+  state.user = null;
+  localStorage.removeItem('token');
+  localStorage.removeItem('user');
+  
+  showAuthScreen();
+  showToast('Logged out successfully');
+}
+
+function checkAuth() {
+  const token = localStorage.getItem('token');
+  const user = localStorage.getItem('user');
+  
+  if (token && user) {
+    state.token = token;
+    state.user = JSON.parse(user);
+    showChatScreen();
+  } else {
+    showAuthScreen();
+  }
+}
+
+// ============================================
+// UI FUNCTIONS
+// ============================================
+
+function showAuthScreen() {
+  elements.authScreen.style.display = 'flex';
+  elements.chatScreen.classList.remove('active');
+  stopPolling();
+}
+
+function showChatScreen() {
+  elements.authScreen.style.display = 'none';
+  elements.chatScreen.classList.add('active');
+  updateUserInfo();
+  loadUsers();
+  loadMessages();
+  startPolling();
+  updateOnlineStatus(true);
+  registerServiceWorker();
+  requestNotificationPermission();
+}
+
+function showLoading(show) {
+  elements.loadingOverlay.style.display = show ? 'flex' : 'none';
+}
+
+function showToast(message, type = 'info') {
+  const toast = document.createElement('div');
+  toast.className = `toast ${type}`;
+  toast.textContent = message;
+  elements.toastContainer.appendChild(toast);
+  
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    setTimeout(() => toast.remove(), 300);
+  }, 3000);
+}
+
+function switchAuthTab(tab) {
+  document.querySelectorAll('.auth-tab').forEach(t => {
+    t.classList.toggle('active', t.dataset.tab === tab);
+  });
+  
+  document.querySelectorAll('.auth-form').forEach(f => {
+    f.classList.toggle('active', f.id === `${tab}Form`);
+  });
+}
+
+function updateUserInfo() {
+  if (state.user) {
+    elements.profileName.textContent = state.user.display_name;
+    elements.profileRole.textContent = state.user.role;
+    elements.profileInitial.textContent = state.user.display_name.charAt(0).toUpperCase();
+    
+    if (state.user.avatar_url) {
+      elements.profileAvatar.innerHTML = `<img src="${state.user.avatar_url}" alt="Avatar">` +
+        `<button class="profile-avatar-change" id="changeAvatarBtn">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+            <circle cx="12" cy="13" r="4"></circle>
+          </svg>
+        </button>`;
+    }
+    
+    // Show admin section if user is admin or moderator
+    if (['admin', 'moderator'].includes(state.user.role)) {
+      elements.adminSection.style.display = 'block';
+    } else {
+      elements.adminSection.style.display = 'none';
+    }
+  }
+}
+
+// ============================================
+// MESSAGE FUNCTIONS
+// ============================================
+
+async function loadMessages() {
+  try {
+    const data = await apiRequest('/messages?limit=100');
+    state.messages = data.messages;
+    renderMessages();
+  } catch (error) {
+    console.error('Failed to load messages:', error);
+  }
+}
+
+async function loadNewMessages() {
+  if (!state.messages.length) return;
+  
+  try {
+    const lastMessage = state.messages[state.messages.length - 1];
+    const data = await apiRequest(`/messages?limit=50&after=${lastMessage.id}`);
+    
+    if (data.messages.length > 0) {
+      state.messages.push(...data.messages);
+      appendMessages(data.messages);
+    }
+  } catch (error) {
+    // Ignore polling errors
+  }
+}
+
+function renderMessages() {
+  elements.chatMessages.innerHTML = '';
+  
+  if (state.messages.length === 0) {
+    elements.chatMessages.innerHTML = `
+      <div class="empty-state">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+        </svg>
+        <h3>No messages yet</h3>
+        <p>Start the conversation with your family!</p>
+      </div>
+    `;
+    return;
+  }
+  
+  const pinnedMessages = state.messages.filter(m => m.isPinned);
+  const normalMessages = state.messages.filter(m => !m.isPinned);
+  
+  // Render pinned messages first
+  pinnedMessages.forEach(msg => renderPinnedMessage(msg));
+  
+  // Group messages by sender and date
+  const groupedMessages = groupMessages(normalMessages);
+  
+  Object.entries(groupedMessages).forEach(([key, messages]) => {
+    if (key !== 'today' && key !== 'yesterday') {
+      const dateEl = document.createElement('div');
+      dateEl.className = 'date-separator';
+      dateEl.innerHTML = `<span>${formatDateHeader(key)}</span>`;
+      elements.chatMessages.appendChild(dateEl);
+    }
+    
+    messages.forEach(msg => renderMessage(msg));
+  });
+  
+  scrollToBottom();
+}
+
+function groupMessages(messages) {
+  const groups = {};
+  const today = new Date().toDateString();
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  
+  messages.forEach(msg => {
+    const date = new Date(msg.timestamp).toDateString();
+    const dateKey = date === today ? 'today' : date === yesterday ? 'yesterday' : date;
+    
+    if (!groups[dateKey]) groups[dateKey] = [];
+    groups[dateKey].push(msg);
+  });
+  
+  return groups;
+}
+
+function appendMessages(messages) {
+  const pinnedMessages = messages.filter(m => m.isPinned && !state.messages.some(sm => sm.id === m.id));
+  const normalMessages = messages.filter(m => !m.isPinned);
+  
+  // Re-render if new pinned messages
+  if (pinnedMessages.length > 0) {
+    pinnedMessages.forEach(msg => renderPinnedMessage(msg));
+  }
+  
+  normalMessages.forEach(msg => renderMessage(msg));
+  scrollToBottom();
+}
+
+function renderMessage(msg) {
+  const isOwn = msg.userId === state.user.id;
+  const messageEl = document.createElement('div');
+  messageEl.className = `message ${isOwn ? 'own' : ''}`;
+  messageEl.dataset.id = msg.id;
+  
+  // Check if can edit/delete (within 1 minute)
+  const canEdit = isOwn && !msg.isDeleted && isWithinEditWindow(msg.timestamp);
+  const canDelete = isOwn && !msg.isDeleted && isWithinEditWindow(msg.timestamp);
+  const canPin = ['admin', 'moderator'].includes(state.user.role);
+  
+  let contentHtml = '';
+  
+  if (msg.isDeleted) {
+    contentHtml = `<div class="message-content message-deleted">🚫 This message was deleted</div>`;
+  } else {
+    switch (msg.type) {
+      case 'text':
+        contentHtml = `<div class="message-content">${formatMessageContent(msg.content)}</div>`;
+        break;
+      case 'image':
+        contentHtml = `<img class="message-image" src="${msg.content}" alt="Image" onclick="viewImage('${msg.content}')">`;
+        break;
+      case 'voice':
+        contentHtml = `<audio class="message-audio" controls src="${msg.content}"></audio>`;
+        break;
+      case 'file':
+        contentHtml = `
+          <a class="message-file" href="${msg.content}" download="${msg.fileName || 'file'}">
+            <div class="message-file-icon">
+              <svg viewBox="0 0 24 24" width="40" height="40" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                <polyline points="14 2 14 8 20 8"></polyline>
+              </svg>
+            </div>
+            <div class="message-file-info">
+              <div class="message-file-name">${msg.fileName || 'File'}</div>
+              <div class="message-file-size">${formatFileSize(msg.fileSize)}</div>
+            </div>
+          </a>
+        `;
+        break;
+      case 'sticker':
+        contentHtml = `<img class="message-sticker" src="${msg.content}" alt="Sticker">`;
+        break;
+    }
+  }
+  
+  messageEl.innerHTML = `
+    ${!isOwn ? `
+      <div class="message-header">
+        <div class="message-avatar">${msg.displayName.charAt(0).toUpperCase()}</div>
+        <span class="message-sender">${escapeHtml(msg.displayName)}</span>
+      </div>
+    ` : ''}
+    <div class="message-actions" style="${canEdit || canDelete || canPin ? '' : 'display: none !important'}">
+      ${msg.replyToId ? '' : `<button class="action-btn" onclick="replyToMessage(${msg.id})" title="Reply">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15 10 20 15 15 20"></polyline>
+          <path d="M4 4v7a4 4 0 0 0 4 4h12"></path>
+        </svg>
+      </button>`}
+      ${canEdit ? `<button class="action-btn" onclick="editMessage(${msg.id})" title="Edit">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+          <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+        </svg>
+      </button>` : ''}
+      ${canDelete ? `<button class="action-btn" onclick="deleteMessage(${msg.id})" title="Delete">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="3 6 5 6 21 6"></polyline>
+          <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+        </svg>
+      </button>` : ''}
+      ${canPin ? `<button class="action-btn" onclick="pinMessage(${msg.id})" title="${msg.isPinned ? 'Unpin' : 'Pin'}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="12" y1="17" x2="12" y2="22"></line>
+          <path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path>
+        </svg>
+      </button>` : ''}
+      <button class="action-btn" onclick="copyMessage(${msg.id})" title="Copy">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+          <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+        </svg>
+      </button>
+    </div>
+    <div class="message-bubble">
+      ${msg.replyTo ? `
+        <div class="reply-indicator" onclick="scrollToMessage(${msg.replyToId})">
+          <span>Replying to ${escapeHtml(msg.replyTo.displayName)}</span>
+        </div>
+      ` : ''}
+      ${contentHtml}
+      <div class="message-footer">
+        <span class="message-time">${formatTime(msg.timestamp)}</span>
+        ${msg.isEdited ? '<span class="message-edited">(edited)</span>' : ''}
+        ${isOwn ? `
+          <span class="message-status sent">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+          </span>
+        ` : ''}
+      </div>
+    </div>
+  `;
+  
+  elements.chatMessages.appendChild(messageEl);
+}
+
+function renderPinnedMessage(msg) {
+  // Remove existing pinned message if exists
+  const existing = document.querySelector('.pinned-message');
+  if (existing) existing.remove();
+  
+  const pinnedEl = document.createElement('div');
+  pinnedEl.className = 'pinned-message';
+  pinnedEl.innerHTML = `
+    <div class="pinned-message-header">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="12" y1="17" x2="12" y2="22"></line>
+        <path d="M5 17h14v-1.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V6h1a2 2 0 0 0 0-4H8a2 2 0 0 0 0 4h1v4.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24Z"></path>
+      </svg>
+      <span>Pinned by ${escapeHtml(msg.pinnedByName || 'Admin')}</span>
+    </div>
+    <div class="pinned-message-content">${msg.type === 'text' ? escapeHtml(msg.content) : `[${msg.type}]`}</div>
+  `;
+  
+  elements.chatMessages.insertBefore(pinnedEl, elements.chatMessages.firstChild);
+}
+
+async function sendMessage(content, type = 'text', extraData = {}) {
+  try {
+    const data = await apiRequest('/messages', {
+      method: 'POST',
+      body: JSON.stringify({
+        type,
+        content,
+        replyTo: state.replyTo,
+        ...extraData
+      })
+    });
+    
+    state.messages.push(data.message);
+    renderMessage(data.message);
+    scrollToBottom();
+    
+    // Clear reply
+    if (state.replyTo) {
+      cancelReply();
+    }
+  } catch (error) {
+    showToast(error.message || 'Failed to send message', 'error');
+  }
+}
+
+async function editMessage(id) {
+  const msg = state.messages.find(m => m.id === id);
+  if (!msg) return;
+  
+  state.editingMessage = msg;
+  elements.editMessageInput.value = msg.content;
+  openModal('editMessageModal');
+}
+
+async function saveEditedMessage() {
+  if (!state.editingMessage) return;
+  
+  const newContent = elements.editMessageInput.value.trim();
+  if (!newContent) return;
+  
+  try {
+    await apiRequest(`/messages/${state.editingMessage.id}`, {
+      method: 'PUT',
+      body: JSON.stringify({ content: newContent })
+    });
+    
+    // Update local state
+    const msg = state.messages.find(m => m.id === state.editingMessage.id);
+    if (msg) {
+      msg.content = newContent;
+      msg.isEdited = true;
+    }
+    
+    closeModal('editMessageModal');
+    showToast('Message updated', 'success');
+    loadMessages();
+  } catch (error) {
+    showToast(error.message || 'Failed to edit message', 'error');
+  }
+}
+
+async function deleteMessage(id) {
+  if (!confirm('Delete this message? This cannot be undone.')) return;
+  
+  try {
+    await apiRequest(`/messages/${id}`, { method: 'DELETE' });
+    
+    // Update local state
+    const msg = state.messages.find(m => m.id === id);
+    if (msg) {
+      msg.isDeleted = true;
+      msg.content = '';
+    }
+    
+    showToast('Message deleted', 'success');
+    loadMessages();
+  } catch (error) {
+    showToast(error.message || 'Failed to delete message', 'error');
+  }
+}
+
+async function pinMessage(id) {
+  try {
+    await apiRequest(`/messages/${id}/pin`, { method: 'POST' });
+    showToast('Message pinned', 'success');
+    loadMessages();
+  } catch (error) {
+    showToast(error.message || 'Failed to pin message', 'error');
+  }
+}
+
+function replyToMessage(id) {
+  const msg = state.messages.find(m => m.id === id);
+  if (!msg) return;
+  
+  state.replyTo = msg;
+  elements.replyBarUser.textContent = `Replying to ${msg.displayName}`;
+  elements.replyBarText.textContent = msg.type === 'text' ? 
+    (msg.content.substring(0, 50) + (msg.content.length > 50 ? '...' : '')) : 
+    `[${msg.type}]`;
+  elements.replyBar.style.display = 'flex';
+  elements.messageInput.focus();
+}
+
+function cancelReply() {
+  state.replyTo = null;
+  elements.replyBar.style.display = 'none';
+}
+
+async function copyMessage(id) {
+  const msg = state.messages.find(m => m.id === id);
+  if (!msg || !msg.content) return;
+  
+  try {
+    await navigator.clipboard.writeText(msg.content);
+    showToast('Message copied', 'success');
+  } catch (error) {
+    showToast('Failed to copy', 'error');
+  }
+}
+
+// ============================================
+// FILE UPLOAD
+// ============================================
+
+async function handleFileUpload(file) {
+  if (!file) return;
+  
+  showLoading(true);
+  
+  try {
+    const fileData = await uploadFile(file);
+    
+    let type = 'file';
+    if (file.type.startsWith('image/')) type = 'image';
+    else if (file.type.startsWith('audio/')) type = 'voice';
+    
+    await sendMessage(fileData.url, type, {
+      fileName: file.name,
+      fileSize: file.size,
+      fileMimeType: file.type
+    });
+  } catch (error) {
+    showToast(error.message || 'Upload failed', 'error');
+  } finally {
+    showLoading(false);
+  }
+}
+
+async function handleAvatarUpload(file) {
+  if (!file) return;
+  
+  showLoading(true);
+  
+  try {
+    const fileData = await uploadFile(file, 'avatar');
+    
+    await apiRequest('/auth/profile', {
+      method: 'PUT',
+      body: JSON.stringify({ displayName: state.user.display_name })
+    });
+    
+    state.user.avatar_url = fileData.url;
+    localStorage.setItem('user', JSON.stringify(state.user));
+    
+    updateUserInfo();
+    showToast('Avatar updated', 'success');
+  } catch (error) {
+    showToast(error.message || 'Upload failed', 'error');
+  } finally {
+    showLoading(false);
+  }
+}
+
+// ============================================
+// VOICE RECORDING
+// ============================================
+
+async function startRecording() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+    
+    state.mediaRecorder = new MediaRecorder(stream);
+    state.audioChunks = [];
+    
+    state.mediaRecorder.ondataavailable = (e) => {
+      state.audioChunks.push(e.data);
+    };
+    
+    state.mediaRecorder.onstop = async () => {
+      const audioBlob = new Blob(state.audioChunks, { type: 'audio/webm' });
+      
+      // Stop all tracks
+      stream.getTracks().forEach(track => track.stop());
+      
+      if (state.audioChunks.length > 0) {
+        await handleFileUpload(new File([audioBlob], 'voice.webm', { type: 'audio/webm' }));
+      }
+    };
+    
+    state.mediaRecorder.start();
+    state.isRecording = true;
+    elements.voiceBtn.classList.add('recording');
+    showToast('Recording... Release to send');
+  } catch (error) {
+    showToast('Microphone access denied', 'error');
+  }
+}
+
+function stopRecording() {
+  if (state.mediaRecorder && state.isRecording) {
+    state.mediaRecorder.stop();
+    state.isRecording = false;
+    elements.voiceBtn.classList.remove('recording');
+  }
+}
+
+// ============================================
+// USER FUNCTIONS
+// ============================================
+
+async function loadUsers() {
+  try {
+    const data = await apiRequest('/users');
+    state.users = data.users;
+    renderUsers();
+  } catch (error) {
+    console.error('Failed to load users:', error);
+  }
+}
+
+function renderUsers() {
+  const onlineUsersHtml = state.users
+    .filter(u => u.is_online)
+    .map(user => renderUserItem(user))
+    .join('');
+  
+  const offlineUsersHtml = state.users
+    .filter(u => !u.is_online)
+    .map(user => renderUserItem(user))
+    .join('');
+  
+  elements.onlineUsersList.innerHTML = onlineUsersHtml || '<p style="color: var(--text-muted); font-size: 14px;">No one online</p>';
+  elements.usersList.innerHTML = offlineUsersHtml || '';
+  
+  // Update online count
+  const onlineCount = state.users.filter(u => u.is_online).length;
+  elements.onlineCount.textContent = `${onlineCount} online`;
+  elements.onlineIndicator.style.display = onlineCount > 0 ? 'block' : 'none';
+  
+  // Update state
+  state.onlineUsers = new Set(state.users.filter(u => u.is_online).map(u => u.id));
+}
+
+function renderUserItem(user) {
+  const isOnline = user.is_online;
+  const isAdmin = user.role === 'admin';
+  const isMod = user.role === 'moderator';
+  
+  return `
+    <div class="user-list-item">
+      <div class="user-avatar">
+        ${user.avatar_url ? 
+          `<img src="${user.avatar_url}" alt="${escapeHtml(user.display_name)}">` :
+          user.display_name.charAt(0).toUpperCase()
+        }
+        ${isOnline ? '<span class="online-badge"></span>' : ''}
+      </div>
+      <div class="user-info">
+        <div class="name">${escapeHtml(user.display_name)}</div>
+        <div class="role ${isAdmin ? 'admin' : isMod ? 'moderator' : ''}">${user.role}</div>
+      </div>
+    </div>
+  `;
+}
+
+// ============================================
+// SEARCH
+// ============================================
+
+async function searchMessages(query) {
+  if (!query || query.length < 2) {
+    elements.searchResults.innerHTML = '';
+    return;
+  }
+  
+  try {
+    const data = await apiRequest(`/messages/search?q=${encodeURIComponent(query)}`);
+    
+    if (data.messages.length === 0) {
+      elements.searchResults.innerHTML = '<p style="color: var(--text-muted); text-align: center;">No results found</p>';
+      return;
+    }
+    
+    elements.searchResults.innerHTML = data.messages.map(msg => `
+      <div class="search-result-item" onclick="scrollToMessage(${msg.id})">
+        <div class="user-avatar">${msg.displayName.charAt(0).toUpperCase()}</div>
+        <div class="user-info">
+          <div class="name">${escapeHtml(msg.displayName)}</div>
+          <div class="role" style="font-size: 12px;">${formatTime(msg.timestamp)}</div>
+        </div>
+        <div style="flex: 1; text-align: right;">
+          <div style="font-size: 14px; color: var(--text-primary); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+            ${escapeHtml(msg.content.substring(0, 30))}${msg.content.length > 30 ? '...' : ''}
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } catch (error) {
+    console.error('Search failed:', error);
+  }
+}
+
+// ============================================
+// ADMIN FUNCTIONS
+// ============================================
+
+async function loadAdminStats() {
+  try {
+    const data = await apiRequest('/admin/stats');
+    
+    elements.statUsers.textContent = data.stats.totalUsers;
+    elements.statMessages.textContent = data.stats.totalMessages;
+    elements.statOnline.textContent = data.stats.onlineUsers;
+    elements.statPinned.textContent = data.stats.pinnedMessages;
+  } catch (error) {
+    console.error('Failed to load admin stats:', error);
+  }
+}
+
+async function loadAdminUsers() {
+  try {
+    const data = await apiRequest('/users');
+    
+    elements.adminUsersList.innerHTML = data.users.map(user => `
+      <div class="admin-user-item">
+        <div class="user-avatar" style="width: 36px; height: 36px; font-size: 14px;">
+          ${user.avatar_url ? 
+            `<img src="${user.avatar_url}" alt="${escapeHtml(user.display_name)}">` :
+            user.display_name.charAt(0).toUpperCase()
+          }
+        </div>
+        <div class="admin-user-info">
+          <div class="admin-user-name">${escapeHtml(user.display_name)}</div>
+          <div class="admin-user-role">${user.role}</div>
+        </div>
+        <div class="admin-user-actions">
+          ${user.role !== 'admin' ? `
+            ${user.role === 'member' ? `
+              <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="promoteUser(${user.id})">Promote</button>
+            ` : `
+              <button class="btn btn-secondary" style="padding: 4px 8px; font-size: 12px;" onclick="demoteUser(${user.id})">Demote</button>
+            `}
+            <button class="btn btn-danger" style="padding: 4px 8px; font-size: 12px;" onclick="deleteUser(${user.id})">Delete</button>
+          ` : ''}
+        </div>
+      </div>
+    `).join('');
+  } catch (error) {
+    console.error('Failed to load admin users:', error);
+  }
+}
+
+async function addUser(username, displayName, password) {
+  try {
+    await apiRequest('/auth/register', {
+      method: 'POST',
+      body: JSON.stringify({ username, displayName, password, role: 'member' })
+    });
+    
+    showToast('User added successfully', 'success');
+    elements.newUsername.value = '';
+    elements.newDisplayName.value = '';
+    elements.newUserPassword.value = '';
+    loadAdminUsers();
+  } catch (error) {
+    showToast(error.message || 'Failed to add user', 'error');
+  }
+}
+
+async function promoteUser(id) {
+  try {
+    await apiRequest(`/users/${id}/role`, {
+      method: 'PUT',
+      body: JSON.stringify({ role: 'moderator' })
+    });
+    showToast('User promoted', 'success');
+    loadAdminUsers();
+    loadUsers();
+  } catch (error) {
+    showToast(error.message || 'Failed to promote user', 'error');
+  }
+}
+
+async function demoteUser(id) {
+  try {
+    await apiRequest(`/users/${id}/role`, {
+      method: 'PUT',
+      body: JSON.stringify({ role: 'member' })
+    });
+    showToast('User demoted', 'success');
+    loadAdminUsers();
+    loadUsers();
+  } catch (error) {
+    showToast(error.message || 'Failed to demote user', 'error');
+  }
+}
+
+async function deleteUser(id) {
+  if (!confirm('Delete this user? This action cannot be undone.')) return;
+  
+  try {
+    await apiRequest(`/users/${id}`, { method: 'DELETE' });
+    showToast('User deleted', 'success');
+    loadAdminUsers();
+    loadUsers();
+  } catch (error) {
+    showToast(error.message || 'Failed to delete user', 'error');
+  }
+}
+
+// ============================================
+// PROFILE FUNCTIONS
+// ============================================
+
+async function updateProfile(displayName) {
+  try {
+    await apiRequest('/auth/profile', {
+      method: 'PUT',
+      body: JSON.stringify({ displayName })
+    });
+    
+    state.user.display_name = displayName;
+    localStorage.setItem('user', JSON.stringify(state.user));
+    
+    updateUserInfo();
+    showToast('Profile updated', 'success');
+    closeModal('editProfileModal');
+  } catch (error) {
+    showToast(error.message || 'Failed to update profile', 'error');
+  }
+}
+
+async function changePassword(currentPassword, newPassword) {
+  try {
+    await apiRequest('/auth/profile', {
+      method: 'PUT',
+      body: JSON.stringify({ currentPassword, newPassword })
+    });
+    
+    showToast('Password changed successfully', 'success');
+    closeModal('changePasswordModal');
+    elements.currentPassword.value = '';
+    elements.newPassword.value = '';
+  } catch (error) {
+    showToast(error.message || 'Failed to change password', 'error');
+  }
+}
+
+// ============================================
+// POLLING
+// ============================================
+
+function startPolling() {
+  if (state.pollingInterval) return;
+  
+  state.pollingInterval = setInterval(() => {
+    loadNewMessages();
+    loadUsers();
+  }, 3000);
+}
+
+function stopPolling() {
+  if (state.pollingInterval) {
+    clearInterval(state.pollingInterval);
+    state.pollingInterval = null;
+  }
+}
+
+async function updateOnlineStatus(isOnline) {
+  try {
+    await apiRequest('/status/online', {
+      method: 'POST',
+      body: JSON.stringify({ isOnline })
+    });
+  } catch (error) {
+    // Ignore errors
+  }
+}
+
+// ============================================
+// PWA & NOTIFICATIONS
+// ============================================
+
+async function registerServiceWorker() {
+  if ('serviceWorker' in navigator) {
+    try {
+      await navigator.serviceWorker.register('/sw.js');
+      console.log('Service Worker registered');
+    } catch (error) {
+      console.error('Service Worker registration failed:', error);
+    }
+  }
+}
+
+async function requestNotificationPermission() {
+  if ('Notification' in window && Notification.permission === 'default') {
+    try {
+      await Notification.requestPermission();
+    } catch (error) {
+      console.error('Notification permission denied');
+    }
+  }
+}
+
+// ============================================
+// MODAL FUNCTIONS
+// ============================================
+
+function openModal(modalId) {
+  document.getElementById(modalId).classList.add('open');
+}
+
+function closeModal(modalId) {
+  document.getElementById(modalId).classList.remove('open');
+}
+
+function closeAllModals() {
+  document.querySelectorAll('.modal-overlay').forEach(m => m.classList.remove('open'));
+}
+
+// ============================================
+// HELPER FUNCTIONS
+// ============================================
+
+function escapeHtml(text) {
+  if (!text) return '';
+  const div = document.createElement('div');
+  div.textContent = text;
+  return div.innerHTML;
+}
+
+function formatMessageContent(content) {
+  // Convert URLs to links
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  content = content.replace(urlRegex, '<a href="$1" target="_blank">$1</a>');
+  
+  // Convert emoji shortcodes to actual emoji (basic set)
+  const emojiMap = {
+    ':)': '🙂',
+    ':-)': '🙂',
+    ':(': '☹️',
+    ':-(': '☹️',
+    ':D': '😃',
+    ':-D': '😃',
+    ':P': '😛',
+    ':-P': '😛',
+    '<3': '❤️',
+    ':O': '😮',
+    ':-O': '😮',
+    ';)': '😉',
+    ':-/': '😕',
+    ':/': '😕'
+  };
+  
+  Object.entries(emojiMap).forEach(([code, emoji]) => {
+    content = content.replace(new RegExp(code.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g'), emoji);
+  });
+  
+  return content;
+}
+
+function formatTime(timestamp) {
+  const date = new Date(timestamp);
+  const now = new Date();
+  
+  if (date.toDateString() === now.toDateString()) {
+    return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  } else if (date.toDateString() === new Date(now - 86400000).toDateString()) {
+    return 'Yesterday ' + date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  } else {
+    return date.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' ' + 
+           date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  }
+}
+
+function formatDateHeader(dateString) {
+  const date = new Date(dateString);
+  const today = new Date().toDateString();
+  const yesterday = new Date(Date.now() - 86400000).toDateString();
+  
+  if (dateString === today) return 'Today';
+  if (dateString === yesterday) return 'Yesterday';
+  
+  return date.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+}
+
+function formatFileSize(bytes) {
+  if (!bytes) return '0 B';
+  const k = 1024;
+  const sizes = ['B', 'KB', 'MB', 'GB'];
+  const i = Math.floor(Math.log(bytes) / Math.log(k));
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+}
+
+function isWithinEditWindow(timestamp) {
+  const messageTime = new Date(timestamp).getTime();
+  const now = Date.now();
+  return now - messageTime < 60000; // 60 seconds
+}
+
+function scrollToBottom() {
+  requestAnimationFrame(() => {
+    elements.chatArea.scrollTop = elements.chatArea.scrollHeight;
+  });
+}
+
+function scrollToMessage(id) {
+  const msgEl = document.querySelector(`.message[data-id="${id}"]`);
+  if (msgEl) {
+    msgEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    msgEl.style.animation = 'none';
+    msgEl.offsetHeight; // Trigger reflow
+    msgEl.style.animation = 'messageIn 0.5s ease';
+  }
+  closeAllModals();
+}
+
+function viewImage(url) {
+  elements.imageViewerImg.src = url;
+  openModal('imageViewerModal');
+}
+
+// ============================================
+// THEME MANAGEMENT
+// ============================================
+
+function initTheme() {
+  const savedTheme = localStorage.getItem('theme') || 'light';
+  document.documentElement.setAttribute('data-theme', savedTheme);
+  elements.darkModeToggle.classList.toggle('active', savedTheme === 'dark');
+}
+
+function toggleTheme() {
+  const currentTheme = document.documentElement.getAttribute('data-theme');
+  const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+  
+  document.documentElement.setAttribute('data-theme', newTheme);
+  localStorage.setItem('theme', newTheme);
+  elements.darkModeToggle.classList.toggle('active', newTheme === 'dark');
+}
+
+// ============================================
+// EVENT LISTENERS
+// ============================================
+
+function initEventListeners() {
+  // Auth tabs
+  document.querySelectorAll('.auth-tab').forEach(tab => {
+    tab.addEventListener('click', () => switchAuthTab(tab.dataset.tab));
+  });
+  
+  // Login form
+  elements.loginForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    login(elements.loginUsername.value, elements.loginPassword.value);
+  });
+  
+  // Register form
+  elements.registerForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    register(
+      elements.registerUsername.value,
+      elements.registerDisplayName.value,
+      elements.registerPassword.value
+    );
+  });
+  
+  // Menu button
+  elements.menuBtn.addEventListener('click', () => {
+    elements.sidebar.classList.add('open');
+  });
+  
+  // Close sidebar
+  elements.closeSidebar.addEventListener('click', () => {
+    elements.sidebar.classList.remove('open');
+  });
+  
+  // Close sidebar when clicking overlay
+  elements.sidebar.addEventListener('click', (e) => {
+    if (e.target === elements.sidebar) {
+      elements.sidebar.classList.remove('open');
+    }
+  });
+  
+  // Send message
+  elements.sendBtn.addEventListener('click', () => {
+    const content = elements.messageInput.value.trim();
+    if (content) {
+      sendMessage(content);
+      elements.messageInput.value = '';
+      elements.messageInput.style.height = 'auto';
+    }
+  });
+  
+  // Message input enter key
+  elements.messageInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      elements.sendBtn.click();
+    }
+  });
+  
+  // Auto-resize textarea
+  elements.messageInput.addEventListener('input', () => {
+    elements.messageInput.style.height = 'auto';
+    elements.messageInput.style.height = Math.min(elements.messageInput.scrollHeight, 120) + 'px';
+  });
+  
+  // Attach button
+  elements.attachBtn.addEventListener('click', () => {
+    elements.fileInput.click();
+  });
+  
+  // File input change
+  elements.fileInput.addEventListener('change', (e) => {
+    if (e.target.files[0]) {
+      handleFileUpload(e.target.files[0]);
+      e.target.value = '';
+    }
+  });
+  
+  // Voice recording
+  elements.voiceBtn.addEventListener('mousedown', startRecording);
+  elements.voiceBtn.addEventListener('mouseup', stopRecording);
+  elements.voiceBtn.addEventListener('mouseleave', () => {
+    if (state.isRecording) stopRecording();
+  });
+  
+  // Touch events for mobile
+  elements.voiceBtn.addEventListener('touchstart', (e) => {
+    e.preventDefault();
+    startRecording();
+  });
+  elements.voiceBtn.addEventListener('touchend', (e) => {
+    e.preventDefault();
+    stopRecording();
+  });
+  
+  // Cancel reply
+  elements.cancelReply.addEventListener('click', cancelReply);
+  
+  // Search button
+  elements.searchBtn.addEventListener('click', () => {
+    openModal('searchModal');
+    elements.searchInput.focus();
+  });
+  
+  // Close search modal
+  elements.closeSearchModal.addEventListener('click', () => closeModal('searchModal'));
+  
+  // Search input
+  elements.searchInput.addEventListener('input', (e) => {
+    clearTimeout(state.searchTimeout);
+    state.searchTimeout = setTimeout(() => searchMessages(e.target.value), 300);
+  });
+  
+  // Settings button
+  elements.settingsBtn.addEventListener('click', () => {
+    openModal('settingsModal');
+  });
+  
+  // Close settings modal
+  elements.closeSettingsModal.addEventListener('click', () => closeModal('settingsModal'));
+  
+  // Dark mode toggle
+  elements.darkModeToggle.addEventListener('click', toggleTheme);
+  
+  // Logout
+  elements.logoutBtn.addEventListener('click', logout);
+  
+  // Change avatar
+  elements.changeAvatarBtn?.addEventListener('click', () => {
+    elements.avatarInput.click();
+  });
+  
+  // Avatar input change
+  elements.avatarInput.addEventListener('change', (e) => {
+    if (e.target.files[0]) {
+      handleAvatarUpload(e.target.files[0]);
+      e.target.value = '';
+    }
+  });
+  
+  // Edit profile
+  elements.editProfileBtn.addEventListener('click', () => {
+    elements.editDisplayName.value = state.user.display_name;
+    closeModal('settingsModal');
+    openModal('editProfileModal');
+  });
+  
+  // Close edit profile modal
+  elements.closeEditProfileModal.addEventListener('click', () => closeModal('editProfileModal'));
+  elements.cancelEditProfileBtn.addEventListener('click', () => closeModal('editProfileModal'));
+  
+  // Save profile
+  elements.saveProfileBtn.addEventListener('click', () => {
+    updateProfile(elements.editDisplayName.value.trim());
+  });
+  
+  // Change password
+  elements.changePasswordBtn.addEventListener('click', () => {
+    closeModal('settingsModal');
+    openModal('changePasswordModal');
+  });
+  
+  // Close change password modal
+  elements.closeChangePasswordModal.addEventListener('click', () => closeModal('changePasswordModal'));
+  elements.cancelChangePasswordBtn.addEventListener('click', () => closeModal('changePasswordModal'));
+  
+  // Save password
+  elements.savePasswordBtn.addEventListener('click', () => {
+    changePassword(elements.currentPassword.value, elements.newPassword.value);
+  });
+  
+  // Admin button
+  elements.openAdminBtn.addEventListener('click', () => {
+    elements.sidebar.classList.remove('open');
+    loadAdminStats();
+    loadAdminUsers();
+    openModal('adminModal');
+  });
+  
+  // Close admin modal
+  elements.closeAdminModal.addEventListener('click', () => closeModal('adminModal'));
+  
+  // Add user
+  elements.addUserBtn.addEventListener('click', () => {
+    const username = elements.newUsername.value.trim();
+    const displayName = elements.newDisplayName.value.trim();
+    const password = elements.newUserPassword.value;
+    
+    if (!username || !displayName || !password) {
+      showToast('Please fill all fields', 'error');
+      return;
+    }
+    
+    addUser(username, displayName, password);
+  });
+  
+  // Close image viewer
+  elements.closeImageViewerModal.addEventListener('click', () => closeModal('imageViewerModal'));
+  
+  // Close edit message modal
+  elements.closeEditMessageModal.addEventListener('click', () => closeModal('editMessageModal'));
+  elements.cancelEditMessageBtn.addEventListener('click', () => closeModal('editMessageModal'));
+  
+  // Save edited message
+  elements.saveEditMessageBtn.addEventListener('click', saveEditedMessage);
+  
+  // Close modals on overlay click
+  document.querySelectorAll('.modal-overlay').forEach(modal => {
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        closeAllModals();
+      }
+    });
+  });
+  
+  // Close modals on escape key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      closeAllModals();
+    }
+  });
+  
+  // Online/offline status
+  window.addEventListener('online', () => {
+    document.body.classList.remove('offline');
+    updateOnlineStatus(true);
+  });
+  
+  window.addEventListener('offline', () => {
+    document.body.classList.add('offline');
+    updateOnlineStatus(false);
+  });
+  
+  // Service worker messages
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.addEventListener('message', (e) => {
+      if (e.data.type === 'MESSAGE_SENT') {
+        showToast('Message sent!', 'success');
+        loadMessages();
+      }
+    });
+  }
+}
+
+// ============================================
+// INITIALIZATION
+// ============================================
+
+function init() {
+  initEventListeners();
+  initTheme();
+  checkAuth();
+  
+  console.log('🏠 Family Connect App initialized');
+}
+
+// Start the app
+document.addEventListener('DOMContentLoaded', init);
+
+// Make functions globally available for onclick handlers
+window.replyToMessage = replyToMessage;
+window.editMessage = editMessage;
+window.deleteMessage = deleteMessage;
+window.pinMessage = pinMessage;
+window.copyMessage = copyMessage;
+window.scrollToMessage = scrollToMessage;
+window.viewImage = viewImage;
+window.promoteUser = promoteUser;
+window.demoteUser = demoteUser;
+window.deleteUser = deleteUser;
+  </script>
+</body>
+</html>
